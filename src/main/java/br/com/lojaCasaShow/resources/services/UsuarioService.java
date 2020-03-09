@@ -24,9 +24,9 @@ public class UsuarioService {
 	public List<Usuario> lista(){
 		return repUsuario.findAll();
 	}
-	public Optional<Usuario> busca(Long id){
-		Optional<Usuario> usuario=repUsuario.findById(id);
-		if(usuario.isEmpty()) {
+	public Usuario busca(Long id){
+		Usuario usuario=repUsuario.findById(id).orElse(null);
+		if(usuario==null) {
 			throw new UsuarioNaoListado("Não encontramos esse Usuário!");
 		}
 		return usuario;
@@ -43,7 +43,7 @@ public class UsuarioService {
 	}
 	public void atualiza(Long id, Usuario usuario) {
 		Optional<Usuario> usuarioDB=repUsuario.findById(id);
-		if(repUsuario.findById(id).isEmpty()) {
+		if(repUsuario.findById(id).orElse(null)==null) {
 			throw new UsuarioNaoListado("Não encontramos esse Usuário!");
 		}
 		usuario.setId(id);

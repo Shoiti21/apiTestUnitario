@@ -31,9 +31,9 @@ public class CasaService {
 	public List<Casa> buscaNome(String nome){
 		return repCasa.findByNomeContaining(nome);
 	}
-	public Optional<Casa> busca(Long id){
-		Optional<Casa> casa=repCasa.findById(id);
-		if(casa.isEmpty()) {
+	public Casa busca(Long id){
+		Casa casa=repCasa.findById(id).orElse(null);
+		if(casa==null) {
 			throw new EventoNaoListado("Não encontramos essa Casa de Show!");
 		}
 		return casa; 
@@ -45,7 +45,7 @@ public class CasaService {
 		return uri;
 	}
 	public void atualiza(Long id,Casa casa) {
-		if(repCasa.findById(id).isEmpty()) {
+		if(repCasa.findById(id).orElse(null)==null) {
 			throw new EventoNaoListado("Não encontramos essa Casa de Show!");
 		}
 		casa.setId(id);

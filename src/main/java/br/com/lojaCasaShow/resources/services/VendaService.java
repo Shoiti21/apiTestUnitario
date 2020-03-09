@@ -22,9 +22,9 @@ public class VendaService {
 	public List<Venda> lista(){
 		return repVenda.findAll();
 	}
-	public Optional<Venda> busca(Long id){
-		Optional<Venda> venda=repVenda.findById(id);
-		if(venda.isEmpty()) {
+	public Venda busca(Long id){
+		Venda venda=repVenda.findById(id).orElse(null);
+		if(venda==null) {
 			throw new VendaNaoListado("Não foi encontramos essa Venda!");
 		}
 		return venda;

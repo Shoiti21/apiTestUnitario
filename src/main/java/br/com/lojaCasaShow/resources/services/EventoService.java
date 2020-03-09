@@ -48,9 +48,9 @@ public class EventoService {
 	public List<Evento> listaPrecoDesc(){
 		return repEvento.findByOrderByPrecoDesc();
 	}
-	public Optional<Evento> busca(Long id){
-		Optional<Evento> evento=repEvento.findById(id);
-		if(evento.isEmpty()) {
+	public Evento busca(Long id){
+		Evento evento=repEvento.findById(id).orElse(null);
+		if(evento==null) {
 			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}
 		return evento; 
@@ -65,7 +65,7 @@ public class EventoService {
 		return uri;
 	}
 	public void atualiza(Long id,Evento evento) {
-		if(repEvento.findById(id).isEmpty()) {
+		if(repEvento.findById(id).orElse(null)==null) {
 			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}
 		evento.setId(id);
