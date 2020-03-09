@@ -50,7 +50,7 @@ public class EventoService {
 	}
 	public Optional<Evento> busca(Long id){
 		Optional<Evento> evento=repEvento.findById(id);
-		if(evento.isEmpty()) {
+		if(evento==null) {
 			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}
 		return evento; 
