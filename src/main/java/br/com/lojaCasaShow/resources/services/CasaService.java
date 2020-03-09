@@ -45,7 +45,8 @@ public class CasaService {
 		return uri;
 	}
 	public void atualiza(Long id,Casa casa) {
-		if(repCasa.findById(id).isEmpty()) {
+		Optional<Casa> casa2=repCasa.findById(id);
+		if(casa2.isEmpty()) {
 			throw new EventoNaoListado("Não encontramos essa Casa de Show!");
 		}
 		casa.setId(id);

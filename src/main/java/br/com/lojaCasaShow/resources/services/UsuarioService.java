@@ -43,7 +43,7 @@ public class UsuarioService {
 	}
 	public void atualiza(Long id, Usuario usuario) {
 		Optional<Usuario> usuarioDB=repUsuario.findById(id);
-		if(repUsuario.findById(id).isEmpty()) {
+		if(usuarioDB.isEmpty()) {
 			throw new UsuarioNaoListado("Não encontramos esse Usuário!");
 		}
 		usuario.setId(id);
