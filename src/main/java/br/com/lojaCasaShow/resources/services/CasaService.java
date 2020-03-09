@@ -33,7 +33,7 @@ public class CasaService {
 	}
 	public Optional<Casa> busca(Long id){
 		Optional<Casa> casa=repCasa.findById(id);
-		if(casa.isEmpty()) {
+		if(casa==null) {
 			throw new EventoNaoListado("Não encontramos essa Casa de Show!");
 		}
 		return casa; 
@@ -46,7 +46,7 @@ public class CasaService {
 	}
 	public void atualiza(Long id,Casa casa) {
 		Optional<Casa> casa2=repCasa.findById(id);
-		if(casa2.isEmpty()) {
+		if(casa2==null) {
 			throw new EventoNaoListado("Não encontramos essa Casa de Show!");
 		}
 		casa.setId(id);

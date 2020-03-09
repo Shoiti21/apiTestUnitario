@@ -66,7 +66,7 @@ public class EventoService {
 	}
 	public void atualiza(Long id,Evento evento) {
 		Optional<Evento> evento2=repEvento.findById(id);
-		if(evento2.isEmpty()) {
+		if(evento2==null) {
 			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}
 		evento.setId(id);
