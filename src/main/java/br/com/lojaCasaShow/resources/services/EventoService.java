@@ -50,7 +50,7 @@ public class EventoService {
 	}
 	public Optional<Evento> busca(Long id){
 		Optional<Evento> evento=repEvento.findById(id);
-		if(evento==null) {
+		if(evento.isEmpty()) {
 			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}
 		return evento; 
@@ -65,8 +65,7 @@ public class EventoService {
 		return uri;
 	}
 	public void atualiza(Long id,Evento evento) {
-		Optional<Evento> evento2=repEvento.findById(id);
-		if(evento2==null) {
+		if(repEvento.findById(id).isEmpty()) {
 			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}
 		evento.setId(id);

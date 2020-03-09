@@ -24,7 +24,7 @@ public class VendaService {
 	}
 	public Optional<Venda> busca(Long id){
 		Optional<Venda> venda=repVenda.findById(id);
-		if(venda!=null) {
+		if(venda.isEmpty()) {
 			throw new VendaNaoListado("Não foi encontramos essa Venda!");
 		}
 		return venda;

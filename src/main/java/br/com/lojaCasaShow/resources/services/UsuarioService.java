@@ -26,7 +26,7 @@ public class UsuarioService {
 	}
 	public Optional<Usuario> busca(Long id){
 		Optional<Usuario> usuario=repUsuario.findById(id);
-		if(usuario==null) {
+		if(usuario.isEmpty()) {
 			throw new UsuarioNaoListado("Não encontramos esse Usuário!");
 		}
 		return usuario;
@@ -43,7 +43,7 @@ public class UsuarioService {
 	}
 	public void atualiza(Long id, Usuario usuario) {
 		Optional<Usuario> usuarioDB=repUsuario.findById(id);
-		if(usuarioDB==null) {
+		if(repUsuario.findById(id).isEmpty()) {
 			throw new UsuarioNaoListado("Não encontramos esse Usuário!");
 		}
 		usuario.setId(id);
