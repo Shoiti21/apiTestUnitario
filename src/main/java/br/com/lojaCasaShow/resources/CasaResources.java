@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lojaCasaShow.domain.Casa;
+import br.com.lojaCasaShow.exceptions.CasaNaoListado;
 import br.com.lojaCasaShow.resources.services.CasaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +36,12 @@ public class CasaResources {
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<?> buscarCasa(@PathVariable("id") Long id_casa) {
 		CacheControl cache=CacheControl.maxAge(10, TimeUnit.SECONDS);
-		return ResponseEntity.status(HttpStatus.OK).cacheControl(cache).body(casaService.busca(id_casa));
+		try {
+			return ResponseEntity.status(HttpStatus.OK).cacheControl(cache).body(casaService.busca(id_casa));
+		}catch(NumberFormatException e){
+			throw new CasaNaoListado("Não encontramos essa Casa de Show!");
+		}
+		
 	}
 	@ApiOperation("Cadastra uma casa")
 	@RequestMapping(method=RequestMethod.POST)

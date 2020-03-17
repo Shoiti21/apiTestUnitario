@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.lojaCasaShow.domain.Casa;
-import br.com.lojaCasaShow.domain.Evento;
+import br.com.lojaCasaShow.exceptions.CasaNaoListado;
 import br.com.lojaCasaShow.exceptions.EventoNaoListado;
 import br.com.lojaCasaShow.repository.repCasa;
 
@@ -32,31 +32,45 @@ public class CasaService {
 		return repCasa.findByNomeContaining(nome);
 	}
 	public Casa busca(Long id){
-		Casa casa=repCasa.findById(id).orElse(null);
-		if(casa==null) {
-			throw new EventoNaoListado("Não encontramos essa Casa de Show!");
+		try{
+			Casa casa=repCasa.findById(id).orElse(null);
+			if(casa==null) {
+				throw new CasaNaoListado("Não encontramos essa Casa de Show!");
+			}
+			return casa; 
+		}catch(NullPointerException e) {
+			throw new CasaNaoListado("Não encontramos essa Casa de Show!");
 		}
-		return casa; 
 	}
 	public URI salvar(Casa casa) {
-		casa.setId(null);
-		repCasa.save(casa);
-		URI uri=ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(casa.getId()).toUri();
-		return uri;
+		try{
+			casa.setId(null);
+			repCasa.save(casa);
+			URI uri=ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(casa.getId()).toUri();
+			return uri;
+		}catch(NullPointerException e) {
+			throw new CasaNaoListado("Não encontramos essa Casa de Show!");
+		}
 	}
 	public void atualiza(Long id,Casa casa) {
-		if(repCasa.findById(id).orElse(null)==null) {
-			throw new EventoNaoListado("Não encontramos essa Casa de Show!");
+		try {
+			if(repCasa.findById(id).orElse(null)==null) {
+				throw new CasaNaoListado("Não encontramos essa Casa de Show!");
+			}
+			casa.setId(id);
+			repCasa.save(casa);
+		}catch(NullPointerException e){
+			throw new CasaNaoListado("Não encontramos essa Casa de Show!");
 		}
-		casa.setId(id);
-		repCasa.save(casa);
 	}
 	public void deleta(Long id) {
-		Optional<Casa> casa=repCasa.findById(id);
 		try {
-		repCasa.delete(casa.get());
-		} catch (EmptyResultDataAccessException e) {
-			throw new EventoNaoListado("Não encontramos essa Casa de Show!");
+			Optional<Casa> casa=repCasa.findById(id);
+			repCasa.delete(casa.get());
+		}catch (EmptyResultDataAccessException e) {
+			throw new CasaNaoListado("Não encontramos essa Casa de Show!");
+		}catch(NullPointerException e) {
+			throw new CasaNaoListado("Não encontramos essa Casa de Show!");
 		}
 	}
 }

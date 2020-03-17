@@ -48,7 +48,7 @@ public class ResourceExceptionHandler {
 		DetalheErro erro=new DetalheErro();
 		erro.setTitulo("O Usuário existe!");
 		erro.setStatus(406l);
-		erro.setMensagem("http://test.com/404");
+		erro.setMensagem("http://test.com/406");
 		erro.setTime(System.currentTimeMillis());
 		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(erro);
 	}
