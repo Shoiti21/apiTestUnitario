@@ -11,7 +11,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.lojaCasaShow.domain.Casa;
 import br.com.lojaCasaShow.exceptions.CasaNaoListado;
-import br.com.lojaCasaShow.exceptions.EventoNaoListado;
 import br.com.lojaCasaShow.repository.repCasa;
 
 @Service

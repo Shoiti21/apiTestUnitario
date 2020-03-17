@@ -1,16 +1,11 @@
 package br.com.lojaCasaShow.resources.services;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.ErrorCollector;
 
 import br.com.lojaCasaShow.domain.Casa;
 import br.com.lojaCasaShow.exceptions.CasaNaoListado;
-import br.com.lojaCasaShow.exceptions.EventoNaoListado;
 import org.junit.Assert;
 import org.junit.Rule;
 

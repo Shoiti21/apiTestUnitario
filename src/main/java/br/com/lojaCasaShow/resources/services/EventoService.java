@@ -49,33 +49,49 @@ public class EventoService {
 		return repEvento.findByOrderByPrecoDesc();
 	}
 	public Evento busca(Long id){
-		Evento evento=repEvento.findById(id).orElse(null);
-		if(evento==null) {
+		try {
+			Evento evento=repEvento.findById(id).orElse(null);
+			if(evento==null) {
+				throw new EventoNaoListado("Não encontramos esse Evento!");
+			}
+			return evento; 			
+		}catch(NullPointerException e) {
 			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}
-		return evento; 
 	}
 	public URI salvar(Evento evento) {
-		evento.setId(null);
-		if(repEvento.findByNome(evento.getNome())==null) {
-			repEvento.save(evento);
-		}
-		
-		URI uri=ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(evento.getId()).toUri();
-		return uri;
-	}
-	public void atualiza(Long id,Evento evento) {
-		if(repEvento.findById(id).orElse(null)==null) {
+		try {
+			evento.setId(null);
+			if(repEvento.findByNome(evento.getNome())==null) {
+				repEvento.save(evento);
+			}
+			
+			URI uri=ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(evento.getId()).toUri();
+			return uri;
+		}catch(NullPointerException e) {
 			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}
-		evento.setId(id);
-		repEvento.save(evento);
+	}
+	public void atualiza(Long id,Evento evento) {
+		try {
+			if(repEvento.findById(id).orElse(null)==null) {
+				throw new EventoNaoListado("Não encontramos esse Evento!");
+			}
+			evento.setId(id);
+			repEvento.save(evento);
+		}catch(NullPointerException e) {
+			throw new EventoNaoListado("Não encontramos esse Evento!");
+		}
 	}
 	public void deleta(Long id) {
-		Optional<Evento> evento=repEvento.findById(id);
 		try {
-			repEvento.delete(evento.get());
-		} catch (NoSuchElementException e) {
+			Optional<Evento> evento=repEvento.findById(id);
+			try {
+				repEvento.delete(evento.get());
+			} catch (NoSuchElementException e) {
+				throw new EventoNaoListado("Não encontramos esse Evento!");
+			}	
+		}catch(NullPointerException e) {
 			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}
 	}
