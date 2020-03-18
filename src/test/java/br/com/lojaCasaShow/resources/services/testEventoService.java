@@ -1,7 +1,7 @@
 package br.com.lojaCasaShow.resources.services;
 
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -10,25 +10,33 @@ import br.com.lojaCasaShow.domain.Evento;
 import br.com.lojaCasaShow.exceptions.EventoNaoListado;
 
 public class testEventoService {
+	private EventoService service;
+	@Before
+	public void setup() {
+		service=new EventoService();
+	}
 	@Rule
 	public ErrorCollector erro=new ErrorCollector();
 	@Test
 	public void excEventoConsulta() {
 		//buscar
-		EventoService service=new EventoService();
 		try {
 			service.busca(null);
 		}catch(EventoNaoListado e){
-			Assert.assertThat(e.getMessage(), CoreMatchers.is("Não encontramos esse Evento!"));
+			erro.checkThat(e.getMessage(), CoreMatchers.is("Não encontramos esse Evento!"));
 		}
 	}
 	@Test
 	public void excEventoDB() {
 		//salvar
-		EventoService service=new EventoService();
 		Evento eventotest=new Evento();
 		try {
 			service.salvar(eventotest);
+		}catch(EventoNaoListado e){
+			erro.checkThat(e.getMessage(), CoreMatchers.is("Não encontramos esse Evento!"));
+		}
+		try {
+			service.salvar(null);
 		}catch(EventoNaoListado e){
 			erro.checkThat(e.getMessage(), CoreMatchers.is("Não encontramos esse Evento!"));
 		}

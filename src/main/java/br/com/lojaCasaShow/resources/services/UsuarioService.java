@@ -25,40 +25,60 @@ public class UsuarioService {
 		return repUsuario.findAll();
 	}
 	public Usuario busca(Long id){
-		Usuario usuario=repUsuario.findById(id).orElse(null);
-		if(usuario==null) {
+		try {
+			Usuario usuario=repUsuario.findById(id).orElse(null);
+			if(usuario==null) {
+				throw new UsuarioNaoListado("Não encontramos esse Usuário!");
+			}
+			return usuario;
+		}catch(NullPointerException e){
 			throw new UsuarioNaoListado("Não encontramos esse Usuário!");
 		}
-		return usuario;
 	}
 	public URI salva(Usuario usuario) {
-		usuario.setId(null);
 		try {
-			repUsuario.save(usuario);
-		} catch(DataIntegrityViolationException e) {
-			throw new UsuarioExiste("Não encontramos esse Usuário!");
-		}
-		URI uri=ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(usuario.getId()).toUri();
-		return uri;
-	}
-	public void atualiza(Long id, Usuario usuario) {
-		Optional<Usuario> usuarioDB=repUsuario.findById(id);
-		if(repUsuario.findById(id).orElse(null)==null) {
+			usuario.setId(null);
+			try {
+				repUsuario.save(usuario);
+			} catch(DataIntegrityViolationException e) {
+				throw new UsuarioExiste("Não encontramos esse Usuário!");
+			}
+			URI uri=ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(usuario.getId()).toUri();
+			return uri;
+		}catch(NullPointerException e){
 			throw new UsuarioNaoListado("Não encontramos esse Usuário!");
 		}
-		usuario.setId(id);
-		BeanUtils.copyProperties(usuarioDB.get(),usuario, "role", "senha");
-		repUsuario.save(usuario);
+	}
+	public void atualiza(Long id, Usuario usuario) {
+		try {
+			Optional<Usuario> usuarioDB=repUsuario.findById(id);
+			if(repUsuario.findById(id).orElse(null)==null) {
+				throw new UsuarioNaoListado("Não encontramos esse Usuário!");
+			}
+			usuario.setId(id);
+			BeanUtils.copyProperties(usuarioDB.get(),usuario, "role", "senha");
+			repUsuario.save(usuario);
+		}catch(NullPointerException e){
+			throw new UsuarioNaoListado("Não encontramos esse Usuário!");
+		}
 	}
 	public void deleta(Long id) {
-		Optional<Usuario> usuario=repUsuario.findById(id);
 		try {
-			repUsuario.delete(usuario.get());
-		} catch (NoSuchElementException e) {
+			Optional<Usuario> usuario=repUsuario.findById(id);
+			try {
+				repUsuario.delete(usuario.get());
+			} catch (NoSuchElementException e) {
+				throw new UsuarioNaoListado("Não encontramos esse Usuário!");
+			}
+		}catch(NullPointerException e){
 			throw new UsuarioNaoListado("Não encontramos esse Usuário!");
 		}
 	}
 	public List<Usuario> buscanome(String username){
-		return repUsuario.findByUsernameContaining(username);
+		try {
+			return repUsuario.findByUsernameContaining(username);
+		}catch(NullPointerException e){
+			throw new UsuarioNaoListado("Não encontramos esse Usuário!");
+		}
 	}
 }

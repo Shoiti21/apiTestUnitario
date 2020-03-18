@@ -23,25 +23,37 @@ public class VendaService {
 		return repVenda.findAll();
 	}
 	public Venda busca(Long id){
-		Venda venda=repVenda.findById(id).orElse(null);
-		if(venda==null) {
+		try {
+			Venda venda=repVenda.findById(id).orElse(null);
+			if(venda==null) {
+				throw new VendaNaoListado("Não foi encontramos essa Venda!");
+			}
+			return venda;	
+		}catch(NullPointerException e){
 			throw new VendaNaoListado("Não foi encontramos essa Venda!");
 		}
-		return venda;
 	}
 	public URI salva(Venda venda) {
-		venda.setId(null);
-		venda.setTicket(UUID.randomUUID());
-		repVenda.save(venda);
-		URI uri=ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(venda.getId()).toUri();
-		return uri;
+		try {
+			venda.setId(null);
+			venda.setTicket(UUID.randomUUID());
+			repVenda.save(venda);
+			URI uri=ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(venda.getId()).toUri();
+			return uri;
+		}catch(NullPointerException e){
+			throw new VendaNaoListado("Não foi encontramos essa Venda!");
+		}
 	}
 	public void deleta(Long id) {
-		Optional<Venda> venda=repVenda.findById(id);
 		try {
-			repVenda.delete(venda.get());
-		} catch (NoSuchElementException e) {
-			throw new VendaNaoListado("Não encontramos essa Venda!");
+			Optional<Venda> venda=repVenda.findById(id);
+			try {
+				repVenda.delete(venda.get());
+			} catch (NoSuchElementException e) {
+				throw new VendaNaoListado("Não encontramos essa Venda!");
+			}
+		}catch(NullPointerException e){
+			throw new VendaNaoListado("Não foi encontramos essa Venda!");
 		}
 	}
 }

@@ -7,15 +7,20 @@ import org.junit.rules.ErrorCollector;
 import br.com.lojaCasaShow.domain.Casa;
 import br.com.lojaCasaShow.exceptions.CasaNaoListado;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 
 public class testCasaService {
+	private CasaService service;
+	@Before
+	public void setup() {
+		service=new CasaService();
+	}
 	@Rule
 	public ErrorCollector erro=new ErrorCollector();
 	@Test
 	public void excCasaConsulta() {
 		//buscar
-		CasaService service=new CasaService();
 		try {
 			service.busca(null);
 		}catch(CasaNaoListado e){
@@ -25,7 +30,6 @@ public class testCasaService {
 	@Test
 	public void excCasaDB() {
 		//salvar
-		CasaService service=new CasaService();
 		Casa casatest=new Casa();
 		try {
 			casatest.setId((long) 1);
