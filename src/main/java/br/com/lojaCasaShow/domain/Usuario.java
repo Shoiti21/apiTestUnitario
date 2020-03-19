@@ -54,7 +54,12 @@ public class Usuario implements UserDetails{
 	@OneToMany(cascade = CascadeType.ALL, mappedBy ="user")
 	@JsonIgnore
 	private List<Venda> venda;
-	
+	public Usuario(Long id, String username, String senha, Roles role) {
+		this.id=id;
+		this.username=username;
+		this.senha=senha;
+		this.role=role;
+	}
 	public Roles getRole() {
 		return role;
 	}

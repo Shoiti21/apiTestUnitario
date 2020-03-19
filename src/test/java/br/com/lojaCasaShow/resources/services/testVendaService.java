@@ -1,7 +1,9 @@
 package br.com.lojaCasaShow.resources.services;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
@@ -13,12 +15,20 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+import br.com.lojaCasaShow.domain.Casa;
+import br.com.lojaCasaShow.domain.Evento;
+import br.com.lojaCasaShow.domain.Genero;
+import br.com.lojaCasaShow.domain.Roles;
+import br.com.lojaCasaShow.domain.Usuario;
 import br.com.lojaCasaShow.domain.Venda;
 import br.com.lojaCasaShow.exceptions.VendaNaoListado;
 
 @RunWith(Parameterized.class)
 public class testVendaService {
 	private VendaService service;
+	private static Usuario usuariotest=new Usuario((long)1,"NomeTest","senha123",Roles.ROLE_CLIENT);
+	private static Casa casatest=new Casa((long)1,"Test1","Test1");
+	private static Evento eventotest=new Evento((long)1,"NomeTest",Genero.ROCK,casatest,new Date(),200,new BigDecimal(100.2));
 	@Parameter
 	public Venda vendatest;
 	@Parameter(value=1)
@@ -30,8 +40,11 @@ public class testVendaService {
 	@Parameters(name= "{1}")
 	public static Collection<Object[]> getParametro(){
 		return Arrays.asList(new Object[][]{
-				{new Venda(),"Test1"},
-				{new Venda(),"Test2"}
+				{new Venda((long)1,usuariotest,new Date(),eventotest),"Test"},
+				{new Venda(null,usuariotest,new Date(),eventotest),"Test_IdNull"},
+				{new Venda((long)1,null,new Date(),eventotest),"Test_UsuarioNull"},
+				{new Venda((long)1,usuariotest,null,eventotest),"Test_DataNull"},
+				{new Venda((long)1,usuariotest,new Date(),null),"Test_EventoNull"}
 		});
 	}
 	@Rule

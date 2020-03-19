@@ -54,6 +54,15 @@ public class Evento {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy ="evento")
 	@JsonIgnore
 	private List<Venda> venda;
+	public Evento(Long id, String nome, Genero genero, Casa casa, Date data, int qtdIngressoDisp, BigDecimal preco) {
+		this.id=id;
+		this.nome=nome;
+		this.genero=genero;
+		this.casa=casa;
+		this.data=data;
+		this.qtdIngressoDisp=qtdIngressoDisp;
+		this.preco=preco;
+	}
 	public List<Venda> getVenda() {
 		return venda;
 	}

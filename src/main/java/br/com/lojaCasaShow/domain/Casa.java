@@ -27,6 +27,11 @@ public class Casa {
 	@NotEmpty
 	@NotNull
 	private String local;
+	public Casa(Long id, String nome, String local) {
+		this.id=id;
+		this.nome=nome;
+		this.local=local;
+	}
 	public Long getId() {
 		return id;
 	}

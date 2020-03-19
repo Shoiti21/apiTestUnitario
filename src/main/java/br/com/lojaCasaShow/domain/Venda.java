@@ -35,6 +35,12 @@ public class Venda {
 	@ApiModelProperty(hidden=true)
 	@JsonInclude(Include.ALWAYS)
 	private UUID ticket;
+	public Venda(Long id, Usuario user, Date data, Evento evento) {
+		this.id=id;
+		this.user=user;
+		this.data=data;
+		this.evento=evento;
+	}
 	public Long getId() {
 		return id;
 	}
