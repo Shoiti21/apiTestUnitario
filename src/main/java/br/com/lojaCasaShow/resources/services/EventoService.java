@@ -3,8 +3,10 @@ package br.com.lojaCasaShow.resources.services;
 import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
+import org.hamcrest.core.IsNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -49,23 +51,18 @@ public class EventoService {
 		return repEvento.findByOrderByPrecoDesc();
 	}
 	public Evento busca(Long id){
-		Evento evento=repEvento.findById(id).orElse(null);
-		if(evento==null) {
+		Optional<Evento> evento=repEvento.findById(id);
+		if(evento.isEmpty()) {
 			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}
-		return evento; 			
+		return evento.get(); 			
 	}
-	public URI salvar(Evento evento) {
+	public void salvar(Evento evento) {
 		evento.setId(null);
-		if(repEvento.findByNome(evento.getNome())==null) {
-			repEvento.save(evento);
-		}
-		
-		URI uri=ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(evento.getId()).toUri();
-		return uri;
+		repEvento.save(evento);
 	}
 	public void atualiza(Long id,Evento evento) {
-		if(repEvento.findById(id).orElse(null)==null) {
+		if(Objects.isNull(repEvento.findById(id).orElse(null))) {
 			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}
 		evento.setId(id);
@@ -78,8 +75,5 @@ public class EventoService {
 		} catch (NoSuchElementException e) {
 			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}	
-	}
-	public void setRepEvento(repEvento repEventoTest) {
-		repEvento=repEventoTest;
 	}
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.lojaCasaShow.domain.Evento;
 import br.com.lojaCasaShow.resources.services.EventoService;
@@ -42,7 +43,8 @@ public class EventoResources {
 	@ApiOperation("Cadastra um evento")
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> salvar(@ApiParam("nome, ID de uma casa, gênero, preço e capacidade") @Valid @RequestBody Evento evento) {
-		return ResponseEntity.created(eventoService.salvar(evento)).build();
+		eventoService.salvar(evento);
+		return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(evento.getId()).toUri()).build();
 	}
 	@ApiOperation("Edita um evento")
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)

@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import br.com.lojaCasaShow.domain.Evento;
 
 public interface repEvento extends JpaRepository<Evento, Long>{
-	Evento findByNome(String nome);
 	List<Evento> findByOrderByNomeAsc();
 	List<Evento> findByOrderByNomeDesc();
 	List<Evento> findByNomeContaining(String nome);
