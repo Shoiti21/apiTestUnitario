@@ -59,14 +59,14 @@ public class testEventoService {
 			{new Evento(null,"NomeTest",Genero.ROCK,casatest,new Date(),200,new BigDecimal(100.2)),"Test_IdNull"}
 		});
 	}
+	@Test
 	public void excEventoConsulta() {
 		//buscarSem
 		try {
 			Mockito.when(repEvento.findById(1L)).thenReturn(Optional.of(eventotest));
 			Mockito.when(repEvento.findById(null)).thenReturn(Optional.empty());
-			System.out.println(eventotest.getId());
+			System.out.println("consultar "+eventotest.getId());
 			Evento resultado=service.busca(eventotest.getId());
-			
 			erro.checkThat(resultado, CoreMatchers.is(CoreMatchers.not(nullValue())));
 			//resultado=service.busca(Mockito.anyLong());
 		}catch(EventoNaoListado e){
@@ -76,20 +76,25 @@ public class testEventoService {
 	@Test
 	public void excEventoSalvar() {
 		//salvar
-		service.salvar(eventotest);
-		Mockito.verify(repEvento).save(eventotest);
-		erro.checkThat(eventotest.getId(), CoreMatchers.is(nullValue()));
+		System.out.println("salvar "+eventotest.getId());
+		try {
+			service.salvar(eventotest);
+			Mockito.verify(repEvento).save(eventotest);
+			erro.checkThat(eventotest.getId(), CoreMatchers.is(nullValue()));
+		}catch(EventoNaoListado e){
+			erro.checkThat(e.getMessage(), CoreMatchers.is("Não encontramos esse Evento!"));
+		}
 	}
 	@Test
 	public void excEventoEditar() {
 		//atualizar
 		try {
+			System.out.println("editar "+eventotest.getId());
 			Evento exevento=new Evento(1L,"NomeTest",Genero.ROCK,casatest,new Date(),200,new BigDecimal(100.2));
 			Mockito.when(repEvento.findById(1L)).thenReturn(Optional.of(exevento));
-			service.atualiza(1L, eventotest);
+			Mockito.when(repEvento.findById(null)).thenReturn(Optional.empty());
+			service.atualiza(eventotest.getId(), eventotest);
 			Mockito.verify(repEvento).save(eventotest);
-			Mockito.when(repEvento.findById(2L)).thenThrow(new EventoNaoListado("Não encontramos esse Evento!"));
-			service.atualiza(2L, eventotest);
 		}catch(EventoNaoListado e){
 			erro.checkThat(e.getMessage(), CoreMatchers.is("Não encontramos esse Evento!"));
 		}
@@ -100,7 +105,7 @@ public class testEventoService {
 		try {
 			Mockito.when(repEvento.findById(1L)).thenReturn(Optional.of(eventotest));
 			Mockito.when(repEvento.findById(null)).thenReturn(Optional.empty());
-			System.out.println(eventotest.getId());
+			System.out.println("delete "+eventotest.getId());
 			service.deleta(eventotest.getId());
 			Mockito.verify(repEvento).delete(eventotest);
 		}catch(EventoNaoListado e){

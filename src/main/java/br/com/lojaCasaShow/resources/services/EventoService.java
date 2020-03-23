@@ -58,8 +58,12 @@ public class EventoService {
 		return evento.get(); 			
 	}
 	public void salvar(Evento evento) {
-		evento.setId(null);
-		repEvento.save(evento);
+		if(evento.getId()!=null) {
+			throw new EventoNaoListado("Não encontramos esse Evento!");
+		}
+		else {
+			repEvento.save(evento);
+		}
 	}
 	public void atualiza(Long id,Evento evento) {
 		if(Objects.isNull(repEvento.findById(id).orElse(null))) {
