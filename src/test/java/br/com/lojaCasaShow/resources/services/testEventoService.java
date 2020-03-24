@@ -1,18 +1,14 @@
 package br.com.lojaCasaShow.resources.services;
 
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.never;
 
 import java.math.BigDecimal;
-import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,7 +26,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import br.com.lojaCasaShow.domain.Casa;
 import br.com.lojaCasaShow.domain.Evento;
 import br.com.lojaCasaShow.domain.Genero;
-import br.com.lojaCasaShow.domain.Usuario;
 import br.com.lojaCasaShow.exceptions.EventoNaoListado;
 import br.com.lojaCasaShow.repository.repEvento;
 
@@ -65,7 +60,6 @@ public class testEventoService {
 		try {
 			Mockito.when(repEvento.findById(1L)).thenReturn(Optional.of(eventotest));
 			Mockito.when(repEvento.findById(null)).thenReturn(Optional.empty());
-			System.out.println("consultar "+eventotest.getId());
 			Evento resultado=service.busca(eventotest.getId());
 			erro.checkThat(resultado, CoreMatchers.is(CoreMatchers.not(nullValue())));
 			//resultado=service.busca(Mockito.anyLong());
@@ -76,7 +70,6 @@ public class testEventoService {
 	@Test
 	public void excEventoSalvar() {
 		//salvar
-		System.out.println("salvar "+eventotest.getId());
 		try {
 			service.salvar(eventotest);
 			Mockito.verify(repEvento).save(eventotest);
@@ -89,7 +82,6 @@ public class testEventoService {
 	public void excEventoEditar() {
 		//atualizar
 		try {
-			System.out.println("editar "+eventotest.getId());
 			Evento exevento=new Evento(1L,"NomeTest",Genero.ROCK,casatest,new Date(),200,new BigDecimal(100.2));
 			Mockito.when(repEvento.findById(1L)).thenReturn(Optional.of(exevento));
 			Mockito.when(repEvento.findById(null)).thenReturn(Optional.empty());
@@ -105,7 +97,6 @@ public class testEventoService {
 		try {
 			Mockito.when(repEvento.findById(1L)).thenReturn(Optional.of(eventotest));
 			Mockito.when(repEvento.findById(null)).thenReturn(Optional.empty());
-			System.out.println("delete "+eventotest.getId());
 			service.deleta(eventotest.getId());
 			Mockito.verify(repEvento).delete(eventotest);
 		}catch(EventoNaoListado e){

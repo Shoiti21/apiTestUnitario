@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.lojaCasaShow.domain.Venda;
 import br.com.lojaCasaShow.resources.services.VendaService;
@@ -38,7 +39,8 @@ public class VendasResource {
 	@ApiOperation("Cadastra uma venda")
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> salvar(@ApiParam(name="corpo", value="ID do usuário, ID evento e data") @Valid @RequestBody Venda venda) {
-		return ResponseEntity.created(vendaService.salva(venda)).build();
+		vendaService.salva(venda);
+		return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(venda.getId()).toUri()).build();
 	}
 	@ApiOperation("Deleta uma venda")
 	@RequestMapping(method=RequestMethod.DELETE)

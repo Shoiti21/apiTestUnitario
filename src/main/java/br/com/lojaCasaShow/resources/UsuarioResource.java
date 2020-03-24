@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.lojaCasaShow.domain.Usuario;
 import br.com.lojaCasaShow.resources.services.UsuarioService;
@@ -38,7 +39,8 @@ public class UsuarioResource {
 	@ApiOperation(value="Cadastra um usuário")
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> salvar(@ApiParam(name="corpo", value="username, senha e role") @Valid @RequestBody Usuario usuario) {
-		return ResponseEntity.created(usuarioService.salva(usuario)).build();
+		usuarioService.salva(usuario);
+		return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(usuario.getId()).toUri()).build();
 	}
 	@ApiOperation("Edita um usuário")
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.lojaCasaShow.domain.Casa;
 import br.com.lojaCasaShow.exceptions.CasaNaoListado;
@@ -41,12 +42,12 @@ public class CasaResources {
 		}catch(NumberFormatException e){
 			throw new CasaNaoListado("Não encontramos essa Casa de Show!");
 		}
-		
 	}
 	@ApiOperation("Cadastra uma casa")
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> salvarCasa(@Valid @RequestBody Casa casa) {
-		return ResponseEntity.created(casaService.salvar(casa)).build();
+		casaService.salvar(casa);
+		return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(casa.getId()).toUri()).build();
 	}
 	@ApiOperation("Edita uma casa")
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)

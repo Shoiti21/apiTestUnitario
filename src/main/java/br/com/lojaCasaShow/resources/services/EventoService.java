@@ -1,15 +1,12 @@
 package br.com.lojaCasaShow.resources.services;
 
-import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.hamcrest.core.IsNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.lojaCasaShow.domain.Evento;
 import br.com.lojaCasaShow.exceptions.EventoNaoListado;
@@ -58,11 +55,11 @@ public class EventoService {
 		return evento.get(); 			
 	}
 	public void salvar(Evento evento) {
-		if(evento.getId()!=null) {
-			throw new EventoNaoListado("Não encontramos esse Evento!");
+		if(evento.getId()==null) {
+			repEvento.save(evento);			
 		}
 		else {
-			repEvento.save(evento);
+			throw new EventoNaoListado("Não encontramos esse Evento!");
 		}
 	}
 	public void atualiza(Long id,Evento evento) {

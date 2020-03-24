@@ -1,13 +1,12 @@
 package br.com.lojaCasaShow.resources.services;
 
-import java.net.URI;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.lojaCasaShow.domain.Casa;
 import br.com.lojaCasaShow.exceptions.CasaNaoListado;
@@ -31,45 +30,33 @@ public class CasaService {
 		return repCasa.findByNomeContaining(nome);
 	}
 	public Casa busca(Long id){
-		try{
-			Casa casa=repCasa.findById(id).orElse(null);
-			if(casa==null) {
-				throw new CasaNaoListado("Não encontramos essa Casa de Show!");
-			}
-			return casa; 
-		}catch(NullPointerException e) {
+		Optional<Casa> casa=repCasa.findById(id);
+		if(casa.isEmpty()) {
 			throw new CasaNaoListado("Não encontramos essa Casa de Show!");
 		}
+		return casa.get(); 
 	}
-	public URI salvar(Casa casa) {
-		try{
-			casa.setId(null);
+	public void salvar(Casa casa) {
+		if(casa.getId()==null) {
 			repCasa.save(casa);
-			URI uri=ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(casa.getId()).toUri();
-			return uri;
-		}catch(NullPointerException e) {
+		}
+		else {
 			throw new CasaNaoListado("Não encontramos essa Casa de Show!");
 		}
 	}
 	public void atualiza(Long id,Casa casa) {
-		try {
-			if(repCasa.findById(id).orElse(null)==null) {
-				throw new CasaNaoListado("Não encontramos essa Casa de Show!");
-			}
-			casa.setId(id);
-			repCasa.save(casa);
-		}catch(NullPointerException e){
+		if(Objects.isNull(repCasa.findById(id).orElse(null))) {
 			throw new CasaNaoListado("Não encontramos essa Casa de Show!");
 		}
+		casa.setId(id);
+		repCasa.save(casa);
 	}
 	public void deleta(Long id) {
+		Optional<Casa> casa=repCasa.findById(id);
 		try {
-			Optional<Casa> casa=repCasa.findById(id);
 			repCasa.delete(casa.get());
-		}catch (EmptyResultDataAccessException e) {
+		}catch (NoSuchElementException e) {
 			throw new CasaNaoListado("Não encontramos essa Casa de Show!");
-		}catch(NullPointerException e) {
-			throw new CasaNaoListado("Não encontramos essa Casa de Show!");
-		}
+		}	
 	}
 }
